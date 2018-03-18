@@ -6,7 +6,7 @@ from Py2Corona.Py2Corona.Classes import display, Text, ImageRect
 pyPhysics = Physics('my_physics')
 display.path = r'C:\py2Corona\main.lua'
 
-background = ImageRect('wall', Img.open('Wallpaper-Celular.jpg'))
+background = ImageRect('wall', Img.open('Wallpaper-Celular.jpg'), CONTENT_WIDTH, CONTENT_HEIGHT)
 
 megaman = ImageRect('mm', Img.open('Mega_Man.png'), 50, 100)
 megaman.x = CENTER_X
