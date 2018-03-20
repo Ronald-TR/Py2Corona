@@ -4,7 +4,7 @@ from Py2Corona.Py2Corona.Behaviors import Physics
 from Py2Corona.Py2Corona.Classes import display, Text, ImageRect
 
 pyPhysics = Physics('my_physics')
-display.path = r'main.lua' # replace with the main.lua path created by your Corona SDK project
+display.path = r'C:\py2Corona\main.lua' # replace with the main.lua path created by your Corona SDK project
 
 background = ImageRect('wall', Img.open('Wallpaper-Celular.jpg'), CONTENT_WIDTH, CONTENT_HEIGHT)
 

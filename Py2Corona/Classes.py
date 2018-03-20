@@ -6,6 +6,9 @@ from Py2Corona.Py2Corona.Consts import *
 r_words = ['varname', 'width', 'height']
 r_code = ['filename', 'varname', 'temp_event']
 
+def get_button_color(color):
+    default_color = ','.join([(i / 255) for i in color[:-1]]) + f',{str(color[-1])}'
+    over = default_color.split(',')[]
 
 def validate_args(i, v): return (str(v) != '') and not (i in r_words)
 
@@ -34,6 +37,20 @@ def get_event_implementation(self, obj, event_type):
     return true
     end
     {self.varname}:addEventListener("{event_type}", {self.varname})"""
+
+
+class Button:
+    def __init__(self, varname='', text='', textColor=(), bgColor=(), width='', height='', x='', y=''):
+        self.text = text
+        self.textColor = textColor
+        self.bgColor =
+        self.width = str(width)
+        self.height = str(height)
+        self.x = str(x)
+        self.y = str(y)
+        self.varname = varname
+
+    def __str__(self):
 
 
 class Text:
