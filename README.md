@@ -46,8 +46,8 @@ display.add(btn)
 display.compile()
 
 # you can change the color of the label and the background of your button passing a tuple in RGBA color
-# btn.fillColor = (255, 255, 255, 1)
-# btn.labelColor = (25, 25, 255, 1)
+# btn.labelColor = (255, 255, 255, 1)
+# btn.fillColor = (25, 25, 255, 1)
 # the values above are the default values for Py2Corona Button Element
 ```
 
