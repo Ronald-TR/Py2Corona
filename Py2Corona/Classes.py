@@ -54,8 +54,8 @@ class Button:
         self.fillColor = get_button_color(bgColor) if bgColor != () else get_button_color((25, 25, 255, 1))
         self.width = str(width) if width != '' else '200'
         self.height = str(height) if height != '' else '40'
-        self.x = str(x)
-        self.y = str(y)
+        self.left = str(x)
+        self.top = str(y)
         self.varname = varname
         self.emboss = 'false'
         self.shape = '"roundedRect"'

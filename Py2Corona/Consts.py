@@ -14,7 +14,11 @@ class Constantes:
         aux = self.name + '*' + str(other)
         return aux
 
-    def __div__(self, other):
+    def __floordiv__(self, other):
+        aux = self.name + '/' + str(other)
+        return aux
+
+    def __truediv__(self, other):
         aux = self.name + '/' + str(other)
         return aux
 
