@@ -32,6 +32,7 @@ display.compile()
 
 ```Python
 from Py2Corona.Py2Corona.Classes import display, Text
+from Py2Corona.Py2Corona.Consts import CENTER_Y
 
 display.path = r'your_corona_project\main.lua'
 # the first parameter it's the name of your element id for Py2Corona,
