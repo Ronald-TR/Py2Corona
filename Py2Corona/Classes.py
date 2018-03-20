@@ -6,9 +6,14 @@ from Py2Corona.Py2Corona.Consts import *
 r_words = ['varname', 'width', 'height']
 r_code = ['filename', 'varname', 'temp_event']
 
+
 def get_button_color(color):
-    default_color = ','.join([(i / 255) for i in color[:-1]]) + f',{str(color[-1])}'
-    over = default_color.split(',')[]
+    default_color = ','.join([str(i / 255)[:3] for i in color[:-1]]) + f',{str(color[-1])}'
+    aux = default_color.split(',')
+    aux[-1] = '0.9'
+    over = ','.join(aux)
+    return '{default={' + default_color + '}, over={'+over+'}}'
+
 
 def validate_args(i, v): return (str(v) != '') and not (i in r_words)
 
@@ -23,8 +28,11 @@ def class_to_code(self, CONST_TYPE):
     return definition + code
 
 
-def get_implementation(obj):
-    code = '\n'.join([f'{obj.varname}.{i}={v}' for i, v in obj.__dict__.items() if validate_code(i, v)])
+def get_implementation(obj, add_varname = True):
+    if add_varname:
+        code = '\n'.join([f'{obj.varname}.{i}={v}' for i, v in obj.__dict__.items() if validate_code(i, v)])
+    else:
+        code = '\n'.join([f'{i}={v}' for i, v in obj.__dict__.items() if validate_code(i, v)])
     if hasattr(obj, 'temp_event'):
         code += f'\n{obj.temp_event}'
         delattr(obj, 'temp_event')
@@ -41,16 +49,20 @@ def get_event_implementation(self, obj, event_type):
 
 class Button:
     def __init__(self, varname='', text='', textColor=(), bgColor=(), width='', height='', x='', y=''):
-        self.text = text
-        self.textColor = textColor
-        self.bgColor =
-        self.width = str(width)
-        self.height = str(height)
+        self.label = f'"{text}"'
+        self.labelColor = get_button_color(textColor) if textColor != () else get_button_color((255, 255, 255, 1))
+        self.fillColor = get_button_color(bgColor) if bgColor != () else get_button_color((25, 25, 255, 1))
+        self.width = str(width) if width != '' else '200'
+        self.height = str(height) if height != '' else '40'
         self.x = str(x)
         self.y = str(y)
         self.varname = varname
+        self.emboss = 'false'
+        self.shape = '"roundedRect"'
 
     def __str__(self):
+        code = '{' + get_implementation(self, False).replace('\n', ',\n') + '}'
+        return f'local widget = require( "widget" )\nlocal {self.varname} = widget.newButton({code})'
 
 
 class Text:

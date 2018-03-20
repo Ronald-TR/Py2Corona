@@ -1,7 +1,7 @@
 from PIL import Image as Img
 from Py2Corona.Py2Corona.Consts import *
 from Py2Corona.Py2Corona.Behaviors import Physics
-from Py2Corona.Py2Corona.Classes import display, Text, ImageRect
+from Py2Corona.Py2Corona.Classes import display, Text, ImageRect, Button
 
 pyPhysics = Physics('my_physics')
 display.path = r'C:\py2Corona\main.lua' # replace with the main.lua path created by your Corona SDK project
@@ -27,11 +27,15 @@ pyPhysics\
     .add(hello, 'static', {'friction': 1})\
     .add(megaman, 'dynamic', {'density': 5, 'friction': 1, 'bounce': 0.5})
 
+btn = Button('btn', 'Meu botao')
+
+
 display.add_event(megaman_jump)
 display.add(background)
 display.add(hello)
 display.add(subtitle)
 display.add(megaman)
 display.add(pyPhysics)
+display.add(btn)
 
 display.compile()
