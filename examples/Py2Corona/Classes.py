@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from Py2Corona.Py2Corona.Consts import *
+from Py2Corona.Consts import *
 
 r_words = ['varname', 'width', 'height']
 r_code = ['filename', 'varname', 'temp_event']

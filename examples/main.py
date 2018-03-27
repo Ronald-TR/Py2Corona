@@ -1,7 +1,7 @@
 from PIL import Image as Img
-from Py2Corona.Py2Corona.Consts import *
-from Py2Corona.Py2Corona.Behaviors import Physics
-from Py2Corona.Py2Corona.Classes import display, Text, ImageRect
+from Py2Corona.Consts import *
+from Py2Corona.Behaviors import Physics
+from Py2Corona.Classes import display, Text, ImageRect
 
 pyPhysics = Physics('my_physics')
 display.path = r'C:\py2Corona\main.lua' # replace with the main.lua path created by your Corona SDK project
