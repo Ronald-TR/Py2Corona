@@ -9,13 +9,13 @@ Transpiler from Python to Corona SDK for building Mobile Apps
 * It's a transpiler who have the goal to code your application in Python, and interprete/build them in Corona SDK Engine
 
 # What you need
-* To make a hello word it's very simple
+* To make a hello word is very simple
 
 ```Python
 from Py2Corona.Py2Corona.Classes import display, Text
 
 display.path = r'your_corona_project\main.lua'
-# the first parameter it's the name of your element id for Py2Corona,
+# the first parameter is the name of your element id for Py2Corona,
 # be sure to put it in every object declaration
 hello = Text('hello', 'Hello World, Py2Corona!')
 display.add(hello)
@@ -35,7 +35,7 @@ from Py2Corona.Py2Corona.Classes import display, Text
 from Py2Corona.Py2Corona.Consts import CENTER_Y
 
 display.path = r'your_corona_project\main.lua'
-# the first parameter it's the name of your element id for Py2Corona,
+# the first parameter is the name of your element id for Py2Corona,
 # be sure to put it in every object declaration
 hello = Text('hello', 'Hello World, Py2Corona!')
 btn = Button('btn', 'My button')
@@ -46,8 +46,8 @@ display.add(btn)
 display.compile()
 
 # you can change the color of the label and the background of your button passing a tuple in RGBA color
+# btn.labelColor = (255, 255, 255, 1)
 # btn.fillColor = (25, 25, 255, 1)
-# btn.labelColor = (25, 25, 255, 1)
 # the values above are the default values for Py2Corona Button Element
 ```
 
