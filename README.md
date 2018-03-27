@@ -3,6 +3,7 @@ Transpiler from Python to Corona SDK for building Mobile Apps
 
 # Requirements 
 * Python 3.6+
+* Pillow (pip install pillow)
 * Corona SDK
 
 # The principle
