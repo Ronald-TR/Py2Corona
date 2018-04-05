@@ -10,7 +10,7 @@ r_code = ['filename', 'varname', 'temp_event']
 def get_button_color(color):
     default_color = ','.join([str(i / 255)[:3] for i in color[:-1]]) + f',{str(color[-1])}'
     aux = default_color.split(',')
-    aux[-1] = str(float(aux[-1]) - 0.1)
+    aux[-1] = str(float(aux[-1]) - 0.1)[:3]
     over = ','.join(aux)
     return '{default={' + default_color + '}, over={'+over+'}}'
 
