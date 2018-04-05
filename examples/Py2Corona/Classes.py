@@ -10,7 +10,7 @@ r_code = ['filename', 'varname', 'temp_event']
 def get_button_color(color):
     default_color = ','.join([str(i / 255)[:3] for i in color[:-1]]) + f',{str(color[-1])}'
     aux = default_color.split(',')
-    aux[-1] = '0.9'
+    aux[-1] = str(float(aux[-1]) - 0.1)
     over = ','.join(aux)
     return '{default={' + default_color + '}, over={'+over+'}}'
 
@@ -87,8 +87,9 @@ class Text:
 
 class ImageRect:
     def __init__(self, varname, image, width='', height='', x=CENTER_X, y=CENTER_Y):
-        shutil.copy(image.filename, os.path.dirname(display.path))
-        filename = image.filename.split('\\')[-1]
+        image.save(f'{varname}.png', 'PNG')
+        shutil.copy(f'{varname}.png', os.path.dirname(display.path))
+        filename = f'{varname}.png' # image.filename.split('\\')[-1]
         self.filename = f'"{filename}"'
         self.width = str(width) if str(width) != '' else str(image.width)
         self.height = str(height) if str(height) != '' else str(image.height)
