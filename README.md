@@ -7,6 +7,9 @@ Transpiler from Python to Corona SDK for building Mobile Apps
 * Pillow (pip install pillow)
 * Corona SDK
 
+# Install
+>pip install pyforcorona
+
 # The principle
 * It's a transpiler who have the goal to code your application in Python, and interprete/build them in Corona SDK Engine
 
