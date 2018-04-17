@@ -1,3 +1,4 @@
+[![Build Status](https://www.travis-ci.org/Ronald-TR/Py2Corona.svg?branch=master)](https://www.travis-ci.org/Ronald-TR/Py2Corona)
 # Py2Corona
 Transpiler from Python to Corona SDK for building Mobile Apps
 
