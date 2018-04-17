@@ -2,13 +2,15 @@ from PIL import Image as Img
 from Py2Corona.Consts import *
 from Py2Corona.Behaviors import Physics
 from Py2Corona.Classes import display, Text, ImageRect
+import os
 
 pyPhysics = Physics('my_physics')
-display.path = r'C:\py2Corona\main.lua' # replace with the main.lua path created by your Corona SDK project
+display.path = r'examples/output/main.lua' # replace with the main.lua path created by your Corona SDK project
+print(os.getcwd())
 
-background = ImageRect('wall', Img.open('Wallpaper-Celular.jpg'), CONTENT_WIDTH, CONTENT_HEIGHT)
+background = ImageRect('wall', Img.open('examples/Wallpaper-Celular.jpg'), CONTENT_WIDTH, CONTENT_HEIGHT)
 
-megaman = ImageRect('mm', Img.open('Mega_Man.png'), 50, 100)
+megaman = ImageRect('mm', Img.open('examples/Mega_Man.png'), 50, 100)
 megaman.x = CENTER_X
 megaman.y = CENTER_Y - 100
 
