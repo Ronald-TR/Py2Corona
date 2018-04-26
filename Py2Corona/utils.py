@@ -71,6 +71,9 @@ def generate_varname(name: "Este é o nome da classe"):
     return rword
 
 
-def compile():
-    for o in all_objects:
-        print(o)
+def compile(path):
+    # need to add code_events in the compilation
+    with open(path, 'wb') as fp:
+        fp.write('widget = require("widget")\n'.encode())
+        for o in all_objects:
+            fp.write(str(o).encode())

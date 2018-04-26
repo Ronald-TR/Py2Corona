@@ -139,6 +139,12 @@ class Button:
 
 
 class Text:
+    def __new__(cls, *args, **kwargs):
+        obj = object.__new__(cls)
+        obj.__init__(*args, **kwargs)
+        all_objects.append(obj)
+        return obj
+
     def __init__(self, *args, **kwargs):
         self._text = Py2CAttr()
         self._x = Py2CAttr()
