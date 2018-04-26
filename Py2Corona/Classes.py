@@ -2,67 +2,136 @@ import os
 import shutil
 
 from Py2Corona.Consts import *
-
-r_words = ['varname', 'width', 'height']
-r_code = ['filename', 'varname', 'temp_event']
+from Py2Corona.utils import *
 
 
-def get_button_color(color):
-    default_color = ','.join([str(i / 255)[:3] for i in color[:-1]]) + f',{str(color[-1])}'
-    aux = default_color.split(',')
-    aux[-1] = str(float(aux[-1]) - 0.1)[:3]
-    over = ','.join(aux)
-    return '{default={' + default_color + '}, over={'+over+'}}'
+class Py2CAttr:
+    def __init__(self, *args, **kwargs):
+        self.python = ''
+        self.corona = ''
+        for arg in kwargs:
+            if not arg in self.__dict__.keys():
+                msg = f'Attribute "{arg}" does not exists'
+                raise AttributeError(msg)
+            setattr(self, arg, kwargs[arg])
 
+    def definition(self, attrname):
+        return f'{attrname}={self.corona}'
 
-def validate_args(i, v): return (str(v) != '') and not (i in r_words)
+    @staticmethod
+    def signature(aobject, rwords=[]):
+        if not rwords:
+            rwords.append('_varname')
+        attributes = [v.definition(k[1:]) for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
+        return ','.join(attributes)
 
-
-def validate_code(i, v): return (str(v) != '') and not (i in r_code)
-
-
-def class_to_code(self, CONST_TYPE):
-    code = '\n'.join([f'{self.varname}.{i}={v}' for i, v in self.__dict__.items() if validate_code(i, v)])
-    args = ','.join([str(v) for i, v in self.__dict__.items() if validate_args(i, v)])
-    definition = f'local {self.varname} = {CONST_TYPE}({args})\n'
-    return definition + code
-
-
-def get_implementation(obj, add_varname = True):
-    if add_varname:
-        code = '\n'.join([f'{obj.varname}.{i}={v}' for i, v in obj.__dict__.items() if validate_code(i, v)])
-    else:
-        code = '\n'.join([f'{i}={v}' for i, v in obj.__dict__.items() if validate_code(i, v)])
-    if hasattr(obj, 'temp_event'):
-        code += f'\n{obj.temp_event}'
-        delattr(obj, 'temp_event')
-    return code
-
-
-def get_event_implementation(self, obj, event_type):
-    return f"""\nfunction {self.varname}:{event_type}( event )
-    {obj.temp_event}
-    return true
-    end
-    {self.varname}:addEventListener("{event_type}", {self.varname})"""
+    def __str__(self):
+        return self.__dict__.__str__()
 
 
 class Button:
-    def __init__(self, varname='', text='', textColor=(), bgColor=(), width='', height='', x='', y=''):
-        self.label = f'"{text}"'
-        self.labelColor = get_button_color(textColor) if textColor != () else get_button_color((255, 255, 255, 1))
-        self.fillColor = get_button_color(bgColor) if bgColor != () else get_button_color((25, 25, 255, 1))
-        self.width = str(width) if width != '' else '200'
-        self.height = str(height) if height != '' else '40'
-        self.left = str(x)
-        self.top = str(y)
-        self.varname = varname
-        self.emboss = 'false'
-        self.shape = '"roundedRect"'
+    def __new__(cls, *args, **kwargs):
+        obj = object.__new__(cls)
+        obj.__init__(*args, **kwargs)
+        all_objects.append(obj)
+        return obj
+
+    def __init__(self, *args, **kwargs):
+        self._varname = Py2CAttr(corona=generate_varname(self.__class__.__name__))
+        self._label = Py2CAttr()
+        self._top = Py2CAttr()
+        self._left = Py2CAttr()
+        self._fillColor = Py2CAttr()
+        self._labelColor = Py2CAttr()
+        self._width = Py2CAttr(corona='200')
+        self._height = Py2CAttr(corona='40')
+        self._emboss = Py2CAttr(corona='false')
+        self._shape = Py2CAttr(corona='"roundedRect"')
+        self._font = Py2CAttr(corona=DEFAULT_FONT)
+        self._fontSize = Py2CAttr(corona='16')
+
+        for arg in kwargs:
+            parg = '_' + arg
+            if parg not in self.__dict__.keys():
+                raise AttributeError(f'Attribute {arg} does not exists in {self.__class__.__name__}')
+            setattr(self, arg, kwargs[arg])
+
+    @property
+    def varname(self):
+        return self._varname
+
+    @varname.setter
+    def varname(self, value):
+        self._varname.corona = generate_varname(self.__class__.__name__ or value)
+        self._varname.python = value
+
+    @property
+    def fillColor(self):
+        return self._fillColor
+
+    @fillColor.setter
+    def fillColor(self, value):
+        self._fillColor.corona = rgbToCoronaColor(value)
+        self._fillColor.python = value
+
+    @property
+    def labelColor(self):
+        return self._labelColor
+
+    @labelColor.setter
+    def labelColor(self, value):
+        self._labelColor.corona = rgbToCoronaColor(value)
+        self._labelColor.python = value
+
+    @property
+    def label(self):
+        return self._label
+
+    @label.setter
+    def label(self, value):
+        self._label.corona = f'"{str(value)}"'
+        self._label.python = str(value)
+
+    @property
+    def top(self):
+        return self._top
+
+    @top.setter
+    def top(self, value):
+        self._top.corona = str(value)
+        self._top.python = str(value)
+
+    @property
+    def left(self):
+        return self._left
+
+    @left.setter
+    def left(self, value):
+        self._left.corona = str(value)
+        self._left.python = str(value)
+
+    @property
+    def font(self):
+        return self._font
+
+    @font.setter
+    def font(self, value):
+        self._font.corona = str(f'"{value}"')
+        self._font.python = str(value)
+
+    @property
+    def fontSize(self):
+        return self._fontSize
+
+    @fontSize.setter
+    def fontSize(self, value):
+        self._fontSize.corona = str(f'{value}')
+        self._fontSize.python = str(value)
 
     def __str__(self):
-        code = '{' + get_implementation(self, False).replace('\n', ',\n') + '}'
-        return f'local widget = require( "widget" )\nlocal {self.varname} = widget.newButton({code})'
+        corona_attrs = Py2CAttr.signature(self).replace(',', ',\n')
+        signature = f'local {self.varname.corona} = widget.newButton({{{corona_attrs}}})'
+        return signature
 
 
 class Text:
@@ -117,6 +186,7 @@ class Display:
         with open(self.path, 'wb') as fp:
             content = '\n'.join([e.__str__() for e in self.elements])
             code_events = '\n'.join([e() for e in self.events])
+            fp.write('widget = require("widget")\n'.encode())
             fp.write(content.encode() + code_events.encode())
 
 
