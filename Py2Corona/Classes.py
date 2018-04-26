@@ -19,10 +19,14 @@ class Py2CAttr:
         return f'{attrname}={self.corona}'
 
     @staticmethod
-    def signature(aobject, rwords=[]):
+    def signature(aobject, rwords=[], hide_attrname=False):
         if not rwords:
             rwords.append('_varname')
-        attributes = [v.definition(k[1:]) for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
+        if not hide_attrname:
+            attributes = [v.definition(k[1:]) for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
+        else:
+            attributes = [v.corona for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
+
         return ','.join(attributes)
 
     def __str__(self):
@@ -135,16 +139,77 @@ class Button:
 
 
 class Text:
-    def __init__(self, varname='', text='', x=CENTER_X, y=CENTER_Y, width='', height='', font=DEFAULT_FONT):
-        self.text = f'"{text}"'
-        self.x = str(x)
-        self.y = str(y)
-        self.width_height = f'({width}, {height})' if width != '' and height != '' else ''
-        self.font = str(font)
-        self.varname = varname
+    def __init__(self, *args, **kwargs):
+        self._text = Py2CAttr()
+        self._x = Py2CAttr()
+        self._y = Py2CAttr()
+        self._width_height = Py2CAttr()
+        self._font = Py2CAttr()
+        self._varname = Py2CAttr(corona=generate_varname(self.__class__.__name__))
+        for arg in kwargs:
+            parg = '_' + arg
+            if parg not in self.__dict__.keys():
+                raise AttributeError(f'Attribute {arg} does not exists in {self.__class__.__name__}')
+            setattr(self, arg, kwargs[arg])
+
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        self._text.corona = f'"{str(value)}"'
+        self._text.python = value
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x.corona = str(value)
+        self._x.python = value
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        self._y.corona = str(value)
+        self._y.python = value
+
+    @property
+    def width_height(self):
+        return self._width_height
+
+    @width_height.setter
+    def width_height(self, value):
+        self._width_height.corona = str(value)
+        self._width_height.python = value
+
+    @property
+    def font(self):
+        return self._font
+
+    @font.setter
+    def font(self, value):
+        self._font.corona = str(value)
+        self._font.python = value
+
+    @property
+    def varname(self):
+        return self._varname
+
+    @varname.setter
+    def varname(self, value):
+        self._varname.corona = str(value)
+        self._varname.python = value
 
     def __str__(self):
-        return class_to_code(self, TEXT)
+        corona_attrs = Py2CAttr.signature(self)
+        signature = f'local {self.varname.corona} = display.newText({{{corona_attrs}}})'
+        return signature
 
     def onTap(self, event_func):
         def argsfunction(*args, **kwargs):
