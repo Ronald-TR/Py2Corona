@@ -69,3 +69,8 @@ def generate_varname(name: "Este é o nome da classe"):
     else:
         generate_varname(name)
     return rword
+
+
+def compile():
+    for o in all_objects:
+        print(o)
