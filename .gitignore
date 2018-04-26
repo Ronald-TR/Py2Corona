@@ -54,3 +54,6 @@ docs/_build/
 .vscode/
 .env
 personal/
+.idea/
+mainfile.py
+examples/*
