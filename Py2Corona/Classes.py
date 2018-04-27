@@ -32,12 +32,17 @@ class Py2CAttr:
 
     @staticmethod
     def signature(aobject, rwords=[], hide_attrname=False):
+        attributes = []
         if not rwords:
             rwords.append('_varname')
-        if not hide_attrname:
-            attributes = [f'\n\t{v.definition(k[1:])}' for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
-        else:
-            attributes = [v.corona for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
+        values = {}
+        [values.__setitem__(k, v) for k, v in aobject.__dict__.items() if k not in rwords]
+        for k, v in values.items():
+            if v.corona:
+                if not hide_attrname:
+                    attributes.append(f'\n\t{v.definition(k[1:])}')
+                else:
+                    attributes.append(f'\n\t{v.corona}')
 
         return ','.join(attributes)
 
@@ -164,11 +169,20 @@ class Text:
         self._width_height = Py2CAttr()
         self._font = Py2CAttr()
         self._varname = Py2CAttr(corona=generate_varname(self.__class__.__name__))
+        self._color = ()
         for arg in kwargs:
             parg = '_' + arg
             if parg not in self.__dict__.keys():
                 raise AttributeError(f'Attribute {arg} does not exists in {self.__class__.__name__}')
             setattr(self, arg, kwargs[arg])
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        self._color = value
 
     @property
     def text(self):
@@ -225,9 +239,13 @@ class Text:
         self._varname.python = value
 
     def __str__(self):
-        corona_attrs = Py2CAttr.signature(self)
+        corona_attrs = Py2CAttr.signature(self, ['_varname', '_color'])
         signature = f'\nlocal {self.varname.corona} = display.newText(\n{{{corona_attrs}}}\n)'
-        return signature
+        definition = ''
+        if self.color:
+            colors, defcolors = rgbToCoronaColor(self.color)
+            definition = f'\n{self.varname.corona}:setFillColor({colors})'
+        return signature + definition
 
     def onTap(self, event_func):
         def argsfunction(*args, **kwargs):
@@ -247,9 +265,9 @@ class ImageRect:
     def __init__(self, *args, **kwargs):
         self.image = None
         self._filename = Py2CAttr()
-        self._width = Py2CAttr()
-        self._height = Py2CAttr()
-        self._varname = Py2CAttr(generate_varname(self.__class__.__name__))
+        self._width = Py2CAttr(corona=CONTENT_WIDTH)
+        self._height = Py2CAttr(corona=CONTENT_HEIGHT)
+        self._varname = Py2CAttr(corona=generate_varname(self.__class__.__name__))
         self._x = Py2CAttr(corona=CENTER_X)
         self._y = Py2CAttr(corona=CENTER_Y)
         for arg in kwargs:
@@ -304,16 +322,16 @@ class ImageRect:
         self._y.python = str(value)
 
     def __str__(self):
-        try:
-            self.filename = f'{self._varname.corona}.png'
-            self.image.save(f'{self._varname.corona}.png', 'PNG')
-            shutil.copy(f'{self._varname.corona}.png', os.path.dirname(display.path))
-        except Exception as E:
-            pass
-        self.width = self.image.width if self.image and self.width.corona != '' else CONTENT_WIDTH
-        self.height = self.image.height if self.image and self.height.corona != '' else CONTENT_HEIGHT
+        if self.image:
+            try:
+                self.filename = f'{self._varname.corona}.png'
+                self.image.save(f'{self._varname.corona}.png', 'PNG')
+                shutil.copy(f'{self._varname.corona}.png', os.path.dirname(display.path))
+            except Exception as E:
+                pass
 
-        corona_attrs = Py2CAttr.signature(self, ['image', '_varname'])
-        signature = f'\nlocal {self._varname.corona} = display.newImageRect(\n{{{corona_attrs}}}\n)'
-        return signature
+        corona_attrs = Py2CAttr.signature(self, ['image', '_varname', '_x', '_y'], True)
+        signature = f'\nlocal {self._varname.corona} = display.newImageRect(\n{corona_attrs}\n)'
+        definition = f'\n{self._varname.corona}.x={self.x.corona}\n{self._varname.corona}.y={self.y.corona}\n'
+        return signature + definition
 
