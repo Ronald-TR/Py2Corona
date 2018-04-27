@@ -238,17 +238,82 @@ class Text:
 
 
 class ImageRect:
-    def __init__(self, varname, image, width='', height='', x=CENTER_X, y=CENTER_Y):
-        image.save(f'{varname}.png', 'PNG')
-        shutil.copy(f'{varname}.png', os.path.dirname(display.path))
-        filename = f'{varname}.png' # image.filename.split('\\')[-1]
-        self.filename = f'"{filename}"'
-        self.width = str(width) if str(width) != '' else str(image.width)
-        self.height = str(height) if str(height) != '' else str(image.height)
-        self.varname = varname
-        self.x = str(x)
-        self.y = str(y)
+    def __new__(cls, *args, **kwargs):
+        obj = object.__new__(cls)
+        obj.__init__(*args, **kwargs)
+        all_objects.append(obj)
+        return obj
+
+    def __init__(self, *args, **kwargs):
+        self.image = None
+        self._filename = Py2CAttr()
+        self._width = Py2CAttr()
+        self._height = Py2CAttr()
+        self._varname = Py2CAttr(generate_varname(self.__class__.__name__))
+        self._x = Py2CAttr(corona=CENTER_X)
+        self._y = Py2CAttr(corona=CENTER_Y)
+        for arg in kwargs:
+            parg = '_' + arg
+            if parg not in self.__dict__.keys():
+                raise AttributeError(f'Attribute {arg} does not exists in {self.__class__.__name__}')
+            setattr(self, arg, kwargs[arg])
+
+    @property
+    def filename(self):
+        return self._filename
+
+    @filename.setter
+    def filename(self, value):
+        self._filename.corona = f'"{str(value)}"'
+        self._filename.python = str(value)
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, value):
+        self._width.corona = str(value)
+        self._width.python = str(value)
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value):
+        self._height.corona = str(value)
+        self._height.python = str(value)
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x.corona = str(value)
+        self._x.python = str(value)
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        self._y.corona = str(value)
+        self._y.python = str(value)
 
     def __str__(self):
-        return class_to_code(self, IMAGE_RECT)
+        try:
+            self.filename = f'{self._varname.corona}.png'
+            self.image.save(f'{self._varname.corona}.png', 'PNG')
+            shutil.copy(f'{self._varname.corona}.png', os.path.dirname(display.path))
+        except Exception as E:
+            pass
+        self.width = self.image.width if self.image and self.width.corona != '' else CONTENT_WIDTH
+        self.height = self.image.height if self.image and self.height.corona != '' else CONTENT_HEIGHT
+
+        corona_attrs = Py2CAttr.signature(self, ['image', '_varname'])
+        signature = f'\nlocal {self._varname.corona} = display.newImageRect(\n{{{corona_attrs}}}\n)'
+        return signature
 
