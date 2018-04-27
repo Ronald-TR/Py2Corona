@@ -1,3 +1,4 @@
+from Py2Corona.singletons import display
 from random import randrange
 import string
 
@@ -71,8 +72,10 @@ def generate_varname(name: "Este é o nome da classe"):
     return rword
 
 
-def compile(path):
+def py2Compile(path=None):
     # need to add code_events in the compilation
+    if not path:
+        path = display.path
     with open(path, 'wb') as fp:
         fp.write('widget = require("widget")\n'.encode())
         for o in all_objects:

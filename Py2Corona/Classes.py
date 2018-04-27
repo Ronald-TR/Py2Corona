@@ -1,8 +1,20 @@
 import os
 import shutil
-
 from Py2Corona.Consts import *
 from Py2Corona.utils import *
+from Py2Corona.singletons import display
+
+
+class WindowsFont:
+    def __init__(self, name):
+        self.name = name
+        try:
+            shutil.copy('C:\\Windows\\Fonts\\' + name, os.path.dirname(display.path))
+        except PermissionError as p:
+            print('Permission denied for font: ' + p.filename + ', ignoring...\n')
+
+    def __str__(self):
+        return self.name
 
 
 class Py2CAttr:
@@ -23,7 +35,7 @@ class Py2CAttr:
         if not rwords:
             rwords.append('_varname')
         if not hide_attrname:
-            attributes = [v.definition(k[1:]) for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
+            attributes = [f'\n\t{v.definition(k[1:])}' for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
         else:
             attributes = [v.corona for k, v in aobject.__dict__.items() if v.corona and not k in rwords]
 
@@ -133,8 +145,8 @@ class Button:
         self._fontSize.python = str(value)
 
     def __str__(self):
-        corona_attrs = Py2CAttr.signature(self).replace(',', ',\n')
-        signature = f'local {self.varname.corona} = widget.newButton({{{corona_attrs}}})'
+        corona_attrs = Py2CAttr.signature(self)
+        signature = f'\nlocal {self.varname.corona} = widget.newButton(\n{{{corona_attrs}}}\n)'
         return signature
 
 
@@ -200,7 +212,7 @@ class Text:
 
     @font.setter
     def font(self, value):
-        self._font.corona = str(value)
+        self._font.corona = f'"{str(value)}"'
         self._font.python = value
 
     @property
@@ -214,7 +226,7 @@ class Text:
 
     def __str__(self):
         corona_attrs = Py2CAttr.signature(self)
-        signature = f'local {self.varname.corona} = display.newText({{{corona_attrs}}})'
+        signature = f'\nlocal {self.varname.corona} = display.newText(\n{{{corona_attrs}}}\n)'
         return signature
 
     def onTap(self, event_func):
@@ -240,26 +252,3 @@ class ImageRect:
     def __str__(self):
         return class_to_code(self, IMAGE_RECT)
 
-
-class Display:
-    def __init__(self):
-        self.elements = []
-        self.path = ''
-        self.events = []
-
-    def add(self, element):
-        self.elements.append(element)
-
-    def add_event(self, event):
-        self.events.append(event)
-
-    def compile(self):
-        with open(self.path, 'wb') as fp:
-            content = '\n'.join([e.__str__() for e in self.elements])
-            code_events = '\n'.join([e() for e in self.events])
-            fp.write('widget = require("widget")\n'.encode())
-            fp.write(content.encode() + code_events.encode())
-
-
-if not hasattr(globals(), 'display'):
-    display = Display()
