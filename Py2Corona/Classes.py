@@ -102,7 +102,8 @@ class Button:
 
     @labelColor.setter
     def labelColor(self, value):
-        self._labelColor.corona = rgbToCoronaColor(value)
+        pure, coronaColor = rgbToCoronaColor(value)
+        self._labelColor.corona = coronaColor
         self._labelColor.python = value
 
     @property
