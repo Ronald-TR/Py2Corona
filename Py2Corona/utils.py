@@ -53,11 +53,11 @@ def rgbToCoronaColor(color):
     if not type(color) is tuple:
         raise AttributeError(f'The Color Attribute expect a tuple with (r, g, b, alpha), but {type(color)} was received.')
 
-    default_color = ','.join([str(i / 255)[:3] for i in color[:-1]]) + f',{str(color[-1])}'
+    default_color = ','.join([str(i / 255)[:5] for i in color[:-1]]) + f',{str(color[-1])}'
     aux = default_color.split(',')
     aux[-1] = str(float(aux[-1]) - 0.1)[:3]
     over = ','.join(aux)
-    return '{default={' + default_color + '}, over={'+over+'}}'
+    return default_color, '{default={' + default_color + '}, over={'+over+'}}'
 
 
 def generate_varname(name: "Este é o nome da classe"):
