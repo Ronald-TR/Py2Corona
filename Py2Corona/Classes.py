@@ -92,7 +92,8 @@ class Button:
 
     @fillColor.setter
     def fillColor(self, value):
-        self._fillColor.corona = rgbToCoronaColor(value)
+        pure, coronaColor = rgbToCoronaColor(value)
+        self._fillColor.corona = coronaColor
         self._fillColor.python = value
 
     @property
