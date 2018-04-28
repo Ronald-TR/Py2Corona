@@ -70,6 +70,8 @@ class Button:
         self._shape = Py2CAttr(corona='"roundedRect"')
         self._font = Py2CAttr(corona=DEFAULT_FONT)
         self._fontSize = Py2CAttr(corona='16')
+        self._strokeWidth = Py2CAttr()
+        self._strokeColor = Py2CAttr(corona=rgbToCoronaColor((0, 0, 0, 1))[1])
 
         for arg in kwargs:
             parg = '_' + arg
@@ -85,6 +87,15 @@ class Button:
     def varname(self, value):
         self._varname.corona = generate_varname(self.__class__.__name__ or value)
         self._varname.python = value
+
+    @property
+    def shape(self):
+        return self._shape
+
+    @shape.setter
+    def shape(self, value):
+        self._shape.corona = f'"{str(value)}"'
+        self._shape.python = value
 
     @property
     def fillColor(self):
@@ -151,6 +162,25 @@ class Button:
         self._fontSize.corona = str(f'{value}')
         self._fontSize.python = str(value)
 
+    @property
+    def strokeWidth(self):
+        return self._strokeWidth
+
+    @strokeWidth.setter
+    def strokeWidth(self, value):
+        self._strokeWidth.corona = str(f'{value}')
+        self._strokeWidth.python = str(value)
+
+    @property
+    def strokeColor(self):
+        return self._strokeColor
+
+    @strokeColor.setter
+    def strokeColor(self, value):
+        pure, coronaColor = rgbToCoronaColor(value)
+        self._strokeColor.corona = coronaColor
+        self._strokeColor.python = value
+
     def __str__(self):
         corona_attrs = Py2CAttr.signature(self)
         signature = f'\nlocal {self.varname.corona} = widget.newButton(\n{{{corona_attrs}}}\n)'
@@ -170,6 +200,7 @@ class Text:
         self._y = Py2CAttr()
         self._width_height = Py2CAttr()
         self._font = Py2CAttr()
+        self._fontSize = Py2CAttr(corona='16')
         self._varname = Py2CAttr(corona=generate_varname(self.__class__.__name__))
         self._color = ()
         for arg in kwargs:
@@ -230,6 +261,15 @@ class Text:
     def font(self, value):
         self._font.corona = f'"{str(value)}"'
         self._font.python = value
+
+    @property
+    def fontSize(self):
+        return self._fontSize
+
+    @fontSize.setter
+    def fontSize(self, value):
+        self._fontSize.corona = str(value)
+        self._fontSize.python = value
 
     @property
     def varname(self):
