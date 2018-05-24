@@ -15,7 +15,9 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -39,6 +41,7 @@ release = '0.3.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,7 +61,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'por'
+language = 'en, por'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -153,3 +156,6 @@ texinfo_documents = [
      author, 'pyforcorona', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+
+# -- Extension configuration -------------------------------------------------
