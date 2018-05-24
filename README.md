@@ -44,7 +44,7 @@ from Py2Corona import *
 
 mypath = r'your_corona_project\main.lua'
 
-hello = Text(Hello World, Py2Corona!')
+hello = Text('Hello World, Py2Corona!')
 btn = Button('My button')
 
 btn.left = 60
@@ -65,7 +65,7 @@ if __name__ == '__main__':
   
 ![helloworld.png](https://github.com/Ronald-TR/Py2Corona/blob/master/examples/helloworld_with_button.png)
 
-## All work arround display singleton
+## Build to be simple and generate clean lua code
 
 
 * With the main.py example, you have physics behavior and responsive backgrounds, as shown below:
