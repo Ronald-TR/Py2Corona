@@ -20,9 +20,9 @@ $ pip install pyforcorona
 from Py2Corona import *
 # here, you will set the path of your lua file in the project
 # are two ways: the first is using the singleton display
-display.path = r'your_corona_project\main.lua'
+# display.path = r'your_corona_project\main.lua'
 # or, just using a single string variable
-mypath = r'your_corona_project\main.lua'
+# mypath = r'your_corona_project\main.lua'
 
 Text('Hello World, Py2Corona!')
 
