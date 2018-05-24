@@ -17,15 +17,19 @@ $ pip install pyforcorona
 * To make a hello word is very simple
 
 ```Python
-from Py2Corona.Classes import display, Text
-
+from Py2Corona import *
+# here, you will set the path of your lua file in the project
+# are two ways: the first is using the singleton display
 display.path = r'your_corona_project\main.lua'
-# the first parameter is the name of your element id for Py2Corona,
-# be sure to put it in every object declaration
-hello = Text('hello', 'Hello World, Py2Corona!')
-display.add(hello)
-display.compile()
+# or, just using a single string variable
+mypath = r'your_corona_project\main.lua'
 
+Text('Hello World, Py2Corona!')
+
+if __name__ == '__main__':
+    # if not parameter especified for the function
+    # this will use the display.path directory
+    py2Compile()
 ```
 
   and you'll have the behavior below:
@@ -36,19 +40,20 @@ display.compile()
 * And with a button
 
 ```Python
-from Py2Corona.Classes import display, Text
-from Py2Corona.Consts import CENTER_Y
+from Py2Corona import *
 
-display.path = r'your_corona_project\main.lua'
-# the first parameter is the name of your element id for Py2Corona,
-# be sure to put it in every object declaration
-hello = Text('hello', 'Hello World, Py2Corona!')
-btn = Button('btn', 'My button')
+mypath = r'your_corona_project\main.lua'
+
+hello = Text(Hello World, Py2Corona!')
+btn = Button('My button')
+
 btn.left = 60
 btn.top = CENTER_Y + 20
-display.add(hello)
-display.add(btn)
-display.compile()
+
+if __name__ == '__main__':
+    # if not parameter especified for the function
+    # this will use the display.path directory
+    py2Compile(mypath)
 
 # you can change the color of the label and the background of your button passing a tuple in RGBA color
 # btn.labelColor = (255, 255, 255, 1)
